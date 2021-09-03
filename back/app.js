@@ -5,6 +5,7 @@ const { Sequelize } = require('sequelize')
 const userRoutes = require('./routes/user')
 const bodyParser = require('body-parser')
 const postRoutes = require('./routes/post')
+const path = require('path')
 
 require('dotenv').config()
 
@@ -32,5 +33,6 @@ app.use((req, res, next) => {
 
 app.use('/api/auth', userRoutes)
 app.use('/api/post', postRoutes)
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 module.exports = app

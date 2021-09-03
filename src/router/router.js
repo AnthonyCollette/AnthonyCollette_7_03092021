@@ -1,28 +1,26 @@
-import { createApp, registerRuntimeCompiler } from "vue";
-import App from "../App.vue";
-import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home";
-import Register from "../views/Register";
-import Login from "../views/Login";
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '../views/Home'
+import Register from '../views/Register'
+import Login from '../views/Login'
 
 const routes = [
     {
-        path: "/",
+        path: '/',
         component: Home,
     },
     {
-        path: "/register",
+        path: '/register',
         component: Register,
     },
     {
-        path: "/login",
+        path: '/login',
         component: Login,
     },
-];
+]
 
 const router = createRouter({
     history: createWebHistory(),
     routes: routes,
-});
+})
 
-export default router;
+export default router

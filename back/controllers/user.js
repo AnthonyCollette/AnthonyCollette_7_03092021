@@ -8,7 +8,7 @@ exports.signup = async (req, res, next) => {
     if (checkUser === null) {
         bcrypt.hash(req.body.password, 10).then(async (hash) => {
             const user = await User.create({ name: req.body.name, email: req.body.email, password: hash })
-            res.status(201).json()
+            return res.status(201).json()
         })
     } else {
         throw 'Vous êtes déjà enregistré !'
@@ -27,10 +27,9 @@ exports.login = async (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ error: 'Mot de passe incorrect !' })
                     }
-                    res.status(200).json({
+                    return res.status(200).json({
                         token: jwt.sign({ user: user }, process.env.TOKEN_KEY, { expiresIn: '24h' }),
                     })
-                    localStorage.setItem('key', 'token')
                 })
                 .catch((error) => res.status(500).json({ error }))
         })

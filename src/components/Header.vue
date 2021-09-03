@@ -11,15 +11,13 @@
 
         <ul class="nav-items" v-else>
             <li v-for="item in navItems" :key="item">
-                <a :href="item.url">{{ item.name }}</a>
+                <router-link :to="item.url">{{ item.name }}</router-link>
             </li>
         </ul>
     </nav>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
     name: 'Header',
     data() {
@@ -50,8 +48,6 @@ export default {
             localStorage.removeItem('JwToken')
             location.href = '/login'
         },
-    },
-    computed: {
         toggleLogin() {
             if (localStorage.getItem('JwToken') == null) {
                 this.login = false
@@ -59,6 +55,9 @@ export default {
                 this.login = true
             }
         },
+    },
+    created() {
+        this.toggleLogin()
     },
 }
 </script>

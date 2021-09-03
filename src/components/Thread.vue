@@ -50,6 +50,12 @@ export default {
     text-align: left;
 }
 
+.post img {
+    max-width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
 .author {
     position: absolute;
     top: -40px;
