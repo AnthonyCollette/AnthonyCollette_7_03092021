@@ -1,10 +1,10 @@
 <template>
     <nav>
         <div class="logo-wrapper">
-            <a href="/">
+            <router-link to="/">
                 <img :src="logo.src" :alt="logo.alt" />
                 <span class="society-name">Groupomania</span>
-            </a>
+            </router-link>
         </div>
 
         <button class="nav-items disconnect" @click="disconnect" v-if="login">Se déconnecter</button>
@@ -45,8 +45,9 @@ export default {
     },
     methods: {
         disconnect() {
+            const router = this.$router
             localStorage.removeItem('JwToken')
-            location.href = '/login'
+            router.push('/login')
         },
         toggleLogin() {
             if (localStorage.getItem('JwToken') == null) {

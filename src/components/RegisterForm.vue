@@ -12,6 +12,10 @@
             <label for="password">Mot de passe</label>
             <input type="password" v-model="password" required />
         </div>
+        <div class="label-wrapper">
+            <label for="avatar">Choisissez votre avatar</label>
+            <input type="file" @change="onFileSelected" />
+        </div>
         <input type="submit" @click="register" value="S'inscrire" />
     </form>
 </template>
@@ -26,20 +30,25 @@ export default {
             name: '',
             email: '',
             password: '',
+            selectedFile: null,
         }
     },
     methods: {
+        onFileSelected(event) {
+            this.selectedFile = event.target.files[0]
+        },
         register(e) {
             e.preventDefault()
-            const user = {
-                name: this.name,
-                email: this.email,
-                password: this.password,
-            }
+            let router = this.$router
+            let data = new FormData()
+            data.append('name', this.name)
+            data.append('email', this.email)
+            data.append('password', this.password)
+            data.append('image', this.selectedFile, this.selectedFile.name)
 
             axios
-                .post('http://localhost:3000/api/auth/signup', user)
-                .then(() => (location.href = '/'))
+                .post('http://localhost:3000/api/auth/signup', data)
+                .then(() => router.push('/'))
                 .catch((error) => console.log(error))
         },
     },

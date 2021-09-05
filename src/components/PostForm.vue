@@ -23,14 +23,11 @@ export default {
     methods: {
         onFileSelected(event) {
             this.selectedFile = event.target.files[0]
-            console.log(this.selectedFile)
         },
         newPost(e) {
             e.preventDefault()
-            const token = 'Bearer ' + localStorage.getItem('JwToken')
-            // const post = {
-            //     postText: this.postText,
-            // }
+            const router = this.$router
+            const token = 'Bearer ' + localStorage.JwToken
             let data = new FormData()
             data.append('postText', this.postText)
             if (this.selectedFile) {
@@ -42,7 +39,7 @@ export default {
                         Authorization: token,
                     },
                 })
-                .then(() => (location.href = '/'))
+                .then(() => router.push('/'))
                 .catch((error) => console.log(error))
         },
     },
