@@ -7,6 +7,7 @@
                     <p>{{ comment.User.name }}</p>
                 </div>
                 <p>{{ comment.text }}</p>
+                <a class="delete-btn" @click="deleteComment(comment.id)">Supprimer</a>
             </li>
         </ul>
     </div>
@@ -25,12 +26,26 @@ export default {
     props: {
         id: Number,
     },
+    methods: {
+        deleteComment(commentId) {
+            const token = 'Bearer ' + localStorage.JwToken
+            axios
+                .delete('http://localhost:3000/api/post/comment/' + commentId, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((res) => {
+                    console.log('Commentaire supprimé !')
+                })
+                .catch((error) => console.log(error))
+        },
+    },
     created() {
         axios
             .get('http://localhost:3000/api/post/' + this.id + '/comment')
             .then((res) => {
                 this.comments = res.data
-                console.log(this.comments)
             })
             .catch((error) => console.log(error))
     },
@@ -74,6 +89,19 @@ li::before {
     align-items: center;
     color: white;
     top: 0;
+    width: 50px;
+}
+
+.delete-btn {
+    font-size: 12px;
+    position: absolute;
+    bottom: -20px;
+    right: 15px;
+    color: white;
+    cursor: pointer;
+}
+.delete-btn:hover {
+    text-decoration: underline;
 }
 
 img {

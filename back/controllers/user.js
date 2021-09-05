@@ -35,3 +35,14 @@ exports.login = async (req, res, next) => {
         })
         .catch((error) => res.status(500).json({ error }))
 }
+
+exports.getUser = async (req, res, next) => {
+    const token = req.headers.authorization.split(' ')[1]
+    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY)
+    const userId = decodedToken.user.id
+    await User.findOne({ where: { id: userId } })
+        .then((user) => {
+            return res.status(200).json(user)
+        })
+        .catch((error) => res.status(500).json({ error }))
+}

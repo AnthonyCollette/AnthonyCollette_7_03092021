@@ -62,3 +62,8 @@ exports.getComments = async (req, res, next) => {
         res.status(200).json(Comment)
     })
 }
+
+exports.deleteComment = async (req, res, next) => {
+    const id = req.params.id
+    const deleteComment = await Comment.destroy({ where: { id: id } }).then(() => res.status(201).json())
+}
