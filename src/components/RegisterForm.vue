@@ -39,7 +39,6 @@ export default {
         },
         register(e) {
             e.preventDefault()
-            let router = this.$router
             let data = new FormData()
             data.append('name', this.name)
             data.append('email', this.email)
@@ -48,7 +47,7 @@ export default {
 
             axios
                 .post('http://localhost:3000/api/auth/signup', data)
-                .then(() => router.push('/'))
+                .then(() => this.$router.replace({ name: 'login' }))
                 .catch((error) => console.log(error))
         },
     },

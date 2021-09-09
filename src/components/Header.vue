@@ -9,12 +9,10 @@
         <div class="connected-nav-wrapper" v-if="login">
             <button class="new-post" @click="toggleNewPostForm()">Créer un post</button>
             <div class="options">
-                <img class="header--avatar" :src="user.avatar" />
-
-                <i class="fas fa-cog icon-options" @click="toggleOptions"></i>
+                <img class="header--avatar" :src="user.avatar" @click="toggleOptions" />
                 <div class="options-wrapper" v-if="optionsShow">
-                    <router-link :to="profile">Modifier mon profil</router-link>
-                    <a @click="disconnect">Se déconnecter</a>
+                    <router-link to="/profile">Modifier mon profil</router-link>
+                    <a class="disconnect" @click="disconnect">Se déconnecter</a>
                 </div>
             </div>
 
@@ -206,7 +204,7 @@ nav {
         &::before {
             content: '';
             top: -20px;
-            left: 42%;
+            left: 7%;
             position: absolute;
             display: inline-block;
             height: 0;
@@ -219,6 +217,7 @@ nav {
     .header--avatar {
         width: 50px;
         margin-right: 15px;
+        cursor: pointer;
     }
 }
 </style>

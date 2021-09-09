@@ -30,7 +30,7 @@ export default {
                         Authorization: token,
                     },
                 })
-                .then(() => router.push('/'))
+                .then(() => this.$router.replace({ name: 'home' }))
                 .catch((error) => console.log(error))
         },
     },

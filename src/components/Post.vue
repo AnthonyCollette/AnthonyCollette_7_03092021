@@ -1,6 +1,6 @@
 <template>
     <li class="post" v-for="(post, index) in posts" :key="index">
-        <i @click="deletePost(post.id)" class="fas fa-times"></i>
+        <i @click="deletePost(post.id)" v-if="checkPostAuthor(post.userid) === true" class="fas fa-times"></i>
         {{ post.text }}
         <img :src="post.image" alt="image" v-if="post.image" />
         <div class="author-wrapper">
@@ -22,6 +22,7 @@ export default {
     data() {
         return {
             posts: '',
+            userid: '',
         }
     },
     components: {
@@ -29,6 +30,25 @@ export default {
         Comment,
     },
     methods: {
+        checkPostAuthor(postUserId) {
+            const token = 'Bearer ' + localStorage.JwToken
+            axios
+                .get('http://localhost:3000/api/auth/getUser', {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((res) => {
+                    this.userid = res.data.id
+                    console.log(postUserId + ' ' + this.userid)
+                    if (postUserId === this.userid) {
+                        return true
+                    } else {
+                        return false
+                    }
+                })
+                .catch((error) => console.log(error))
+        },
         deletePost(id) {
             const token = 'Bearer ' + localStorage.JwToken
             axios
@@ -38,10 +58,13 @@ export default {
                     },
                 })
                 .then(() => {
-                    console.log('Post supprimé')
+                    this.$router.replace({ name: 'home' })
                 })
                 .catch((error) => console.log(error))
         },
+    },
+    created() {
+        this.checkPostAuthor()
     },
     mounted() {
         axios

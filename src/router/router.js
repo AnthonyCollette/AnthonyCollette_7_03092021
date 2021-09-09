@@ -7,19 +7,37 @@ import Profile from '../views/Profile'
 const routes = [
     {
         path: '/',
+        name: 'home',
         component: Home,
+        beforeEnter: (to, from, next) => {
+            if (localStorage.JwToken == null) {
+                next({ path: '/login' })
+            } else {
+                next()
+            }
+        },
     },
     {
         path: '/register',
+        name: 'register',
         component: Register,
     },
     {
         path: '/login',
+        name: 'login',
         component: Login,
     },
     {
         path: '/profile',
+        name: 'profile',
         component: Profile,
+        beforeEnter: (to, from, next) => {
+            if (localStorage.JwToken == null) {
+                next({ path: '/login' })
+            } else {
+                next()
+            }
+        },
     },
 ]
 

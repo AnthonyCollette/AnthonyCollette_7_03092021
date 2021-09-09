@@ -32,10 +32,9 @@ export default {
             axios
                 .post('http://localhost:3000/api/auth/login', user)
                 .then((res) => {
-                    const router = this.$router
                     let token = res.data.token
                     localStorage.setItem('JwToken', token)
-                    router.push('/')
+                    this.$router.replace({ name: 'home' })
                 })
                 .catch((error) => console.log(error))
         },

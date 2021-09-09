@@ -26,7 +26,6 @@ export default {
         },
         newPost(e) {
             e.preventDefault()
-            const router = this.$router
             const token = 'Bearer ' + localStorage.JwToken
             let data = new FormData()
             data.append('postText', this.postText)
@@ -39,7 +38,7 @@ export default {
                         Authorization: token,
                     },
                 })
-                .then(() => router.push('/'))
+                .then(() => this.$router.replace({ name: 'home' }))
                 .catch((error) => console.log(error))
         },
     },

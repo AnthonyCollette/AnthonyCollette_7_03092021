@@ -7,5 +7,6 @@ const auth = require('../middlewares/auth')
 router.post('/signup', multer, userCtrl.signup)
 router.post('/login', userCtrl.login)
 router.get('/getUser', userCtrl.getUser)
+router.post('/update', auth, multer, userCtrl.updateOne)
 
 module.exports = router
