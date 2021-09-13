@@ -1,36 +1,41 @@
 <template>
-    <li class="post" v-for="(post, index) in posts" :key="index">
-        <i @click="deletePost(post.id)" v-if="checkPostAuthor(post.userid) === true" class="fas fa-times"></i>
+    <div class="post">
+        <i @click="$emit('deletePost', post.id)" class="fas fa-times" v-if="post.userid === userid"></i>
+
         {{ post.text }}
         <img :src="post.image" alt="image" v-if="post.image" />
         <div class="author-wrapper">
             <img :src="post.User.avatar" alt="" />
             <p>{{ post.User.name }}</p>
         </div>
-        <Comment :id="post.id" />
-        <CommentForm :id="post.id" />
-    </li>
+        <Comment :id="post.id" :userid="userid" :comments="comments" @deleteComment="deleteComment" />
+        <CommentForm :id="post.id" :comments="comments" @addNewComment="newCommentAdded" />
+    </div>
 </template>
 
 <script>
-import axios from 'axios'
 import CommentForm from '@/components/CommentForm'
 import Comment from '@/components/Comment'
+import axios from 'axios'
 
 export default {
     name: 'Post',
-    data() {
-        return {
-            posts: '',
-            userid: '',
-        }
-    },
     components: {
         CommentForm,
         Comment,
     },
+    props: {
+        post: Object,
+        userid: Number,
+    },
+    data() {
+        return {
+            comments: [],
+            id: this.post.id,
+        }
+    },
     methods: {
-        checkPostAuthor(postUserId) {
+        checkPostAuthor() {
             const token = 'Bearer ' + localStorage.JwToken
             axios
                 .get('http://localhost:3000/api/auth/getUser', {
@@ -40,39 +45,43 @@ export default {
                 })
                 .then((res) => {
                     this.userid = res.data.id
-                    console.log(postUserId + ' ' + this.userid)
-                    if (postUserId === this.userid) {
-                        return true
-                    } else {
-                        return false
-                    }
                 })
                 .catch((error) => console.log(error))
         },
-        deletePost(id) {
+        async deleteComment(commentId) {
             const token = 'Bearer ' + localStorage.JwToken
-            axios
-                .delete('http://localhost:3000/api/post/delete/' + id, {
+            const deleteComment = await axios
+                .delete('http://localhost:3000/api/post/comment/' + commentId, {
                     headers: {
                         Authorization: token,
                     },
                 })
                 .then(() => {
-                    this.$router.replace({ name: 'home' })
+                    this.comments = this.comments.filter((comment) => comment.id !== commentId)
                 })
                 .catch((error) => console.log(error))
         },
+        async newCommentAdded(id, data) {
+            const token = 'Bearer ' + localStorage.JwToken
+            const addComment = await axios
+                .post(`http://localhost:3000/api/post/${id}/comment/create`, data, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then(async () => {
+                    this.comments = await this.fetchComments()
+                })
+                .catch((error) => console.log(error))
+        },
+        async fetchComments() {
+            const res = await fetch(`http://localhost:3000/api/post/${this.post.id}/comment`)
+            const comment = await res.json()
+            return comment
+        },
     },
-    created() {
-        this.checkPostAuthor()
-    },
-    mounted() {
-        axios
-            .get('http://localhost:3000/api/post/')
-            .then((res) => {
-                this.posts = res.data
-            })
-            .catch((error) => console.log(error))
+    async created() {
+        this.comments = await this.fetchComments()
     },
 }
 </script>

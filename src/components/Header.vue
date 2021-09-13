@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <PostForm v-if="newPostForm" />
+            <PostForm v-if="newPostForm" @create-post="newPost" />
         </div>
 
         <ul class="nav-items" v-if="!login">
@@ -33,40 +33,32 @@ import axios from 'axios'
 
 export default {
     name: 'Header',
+    components: {
+        PostForm,
+    },
     data() {
         return {
             login: false,
             newPostForm: false,
             optionsShow: false,
             user: '',
-            navItems: [
-                {
-                    name: 'Home',
-                    url: '/',
-                },
-                {
-                    name: 'Se connecter',
-                    url: '/login',
-                },
-                {
-                    name: "S'inscrire",
-                    url: '/register',
-                },
-            ],
             logo: {
                 src: require(`@/assets/icon.svg`),
                 alt: 'Logo de Groupomania',
             },
         }
     },
-    components: {
-        PostForm,
+    props: {
+        postForm: Object,
     },
     methods: {
         disconnect() {
-            const router = this.$router
             localStorage.removeItem('JwToken')
-            router.push('/login')
+            this.$router.replace({ name: 'login' })
+        },
+        newPost(data) {
+            this.$emit('new-post-added', data)
+            this.newPostForm = false
         },
         toggleLogin() {
             if (localStorage.getItem('JwToken') == null) {

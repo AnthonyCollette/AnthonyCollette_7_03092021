@@ -7,47 +7,19 @@
                     <p>{{ comment.User.name }}</p>
                 </div>
                 <p>{{ comment.text }}</p>
-                <a class="delete-btn" @click="deleteComment(comment.id)">Supprimer</a>
+                <a class="delete-btn" @click="$emit('deleteComment', comment.id)" v-if="comment.userid === userid">Supprimer</a>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
     name: 'Comment',
-    data() {
-        return {
-            comments: '',
-        }
-    },
     props: {
         id: Number,
-    },
-    methods: {
-        deleteComment(commentId) {
-            const token = 'Bearer ' + localStorage.JwToken
-            axios
-                .delete('http://localhost:3000/api/post/comment/' + commentId, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then((res) => {
-                    console.log('Commentaire supprimé !')
-                })
-                .catch((error) => console.log(error))
-        },
-    },
-    created() {
-        axios
-            .get('http://localhost:3000/api/post/' + this.id + '/comment')
-            .then((res) => {
-                this.comments = res.data
-            })
-            .catch((error) => console.log(error))
+        comments: Array,
+        userid: Number,
     },
 }
 </script>

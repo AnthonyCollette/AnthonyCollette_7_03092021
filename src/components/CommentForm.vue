@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
     name: 'CommentForm',
     data() {
@@ -17,21 +15,15 @@ export default {
     },
     props: {
         id: Number,
+        comments: Array,
     },
     methods: {
         addComment(id) {
-            let router = this.$router
             const token = 'Bearer ' + localStorage.JwToken
             let data = new FormData()
             data.append('comment', this.comment)
-            axios
-                .post('http://localhost:3000/api/post/' + id + '/comment/create', data, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then(() => this.$router.replace({ name: 'home' }))
-                .catch((error) => console.log(error))
+            this.$emit('addNewComment', id, data)
+            this.comment = ''
         },
     },
 }

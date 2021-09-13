@@ -1,17 +1,15 @@
 <template>
-    <form id="postform">
+    <form id="postform" @submit="onSubmit">
         <div class="label-wrapper">
             <label>Créer un nouveau post</label>
             <textarea type="text" v-model="postText" maxlength="500" required />
             <input type="file" @change="onFileSelected" />
         </div>
-        <input type="submit" @click="newPost" value="Créer un post" />
+        <input type="submit" value="Créer un post" />
     </form>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
     name: 'PostForm',
     data() {
@@ -21,25 +19,21 @@ export default {
         }
     },
     methods: {
-        onFileSelected(event) {
-            this.selectedFile = event.target.files[0]
-        },
-        newPost(e) {
+        onSubmit(e) {
             e.preventDefault()
-            const token = 'Bearer ' + localStorage.JwToken
             let data = new FormData()
             data.append('postText', this.postText)
+
             if (this.selectedFile) {
                 data.append('image', this.selectedFile, this.selectedFile.name)
             }
-            axios
-                .post('http://localhost:3000/api/post/create', data, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then(() => this.$router.replace({ name: 'home' }))
-                .catch((error) => console.log(error))
+            this.$emit('create-post', data)
+
+            this.postText = ''
+            this.selectedFile = null
+        },
+        onFileSelected(event) {
+            this.selectedFile = event.target.files[0]
         },
     },
 }
@@ -57,6 +51,7 @@ form {
     border-radius: 10px;
     padding: 15px;
     color: white;
+    z-index: 999;
 }
 
 form::before {
