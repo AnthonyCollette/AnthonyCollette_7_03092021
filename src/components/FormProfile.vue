@@ -47,7 +47,9 @@ export default {
                         Authorization: token,
                     },
                 })
-                .then(() => this.$router.replace({ name: 'home' }))
+                .then(() => {
+                    this.$router.replace({ name: 'home' })
+                })
                 .catch((error) => console.log(error))
         },
     },
