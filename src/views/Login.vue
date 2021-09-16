@@ -4,6 +4,7 @@
         <div class="container">
             <Heading1 title="Se connecter" />
             <LoginForm />
+            <router-link to="/register" class="register-link">Pas de compte ? Crées-en un ici !</router-link>
         </div>
         <Footer />
     </main>
@@ -26,4 +27,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+form {
+    margin-bottom: 50px;
+}
+.register-link {
+    font-size: 14px;
+    color: #f49292;
+}
+</style>
