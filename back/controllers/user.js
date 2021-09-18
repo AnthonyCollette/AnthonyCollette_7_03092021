@@ -10,7 +10,7 @@ exports.signup = async (req, res, next) => {
         bcrypt
             .hash(req.body.password, 10)
             .then(async (hash) => {
-                const user = await User.create({ name: req.body.name, email: req.body.email, password: hash, avatar: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` })
+                const user = await User.create({ name: req.body.name, email: req.body.email, password: hash, avatar: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, role: 'membre' })
                 return res.status(201).json()
             })
             .catch((error) => res.status(500).json({ error }))

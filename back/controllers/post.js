@@ -16,6 +16,29 @@ exports.create = async (req, res, next) => {
     }
 }
 
+exports.update = async (req, res, next) => {
+    const id = req.params.id
+    const post = await Post.findOne({ where: { id: id } })
+    if (req.body.text) {
+        post.text = req.body.text
+    }
+    if (req.file) {
+        const filename = post.image.split('/images/')[1]
+        fs.unlink(`images/${filename}`, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log('Image supprimée !')
+            }
+        })
+        post.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    }
+    await post
+        .save()
+        .then(() => res.status(201).json())
+        .catch((error) => res.status(500).json({ error }))
+}
+
 exports.getAll = async (req, res, next) => {
     const posts = await Post.findAll({
         include: User,

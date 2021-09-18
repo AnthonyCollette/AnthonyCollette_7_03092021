@@ -16,6 +16,9 @@ const routes = [
                 next()
             }
         },
+        meta: {
+            nav: 1,
+        },
     },
     {
         path: '/register',
@@ -37,6 +40,9 @@ const routes = [
             } else {
                 next()
             }
+        },
+        meta: {
+            nav: 2,
         },
     },
 ]

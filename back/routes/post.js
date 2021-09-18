@@ -8,6 +8,7 @@ const checkCommentId = require('../middlewares/checkCommentId')
 
 router.post('/create', auth, multer, postCtrl.create)
 router.get('/', postCtrl.getAll)
+router.put('/:id/update', auth, multer, postCtrl.update)
 router.delete('/delete/:id', auth, checkPostId, multer, postCtrl.delete)
 router.post('/:id/comment/create', auth, multer, postCtrl.createComment)
 router.get('/:id/comment', postCtrl.getComments)

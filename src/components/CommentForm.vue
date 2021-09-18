@@ -19,6 +19,9 @@ export default {
     },
     methods: {
         addComment(id) {
+            if (!this.comment) {
+                return alert('Votre commentaire est vide !')
+            }
             const token = 'Bearer ' + localStorage.JwToken
             let data = new FormData()
             data.append('comment', this.comment)

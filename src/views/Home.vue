@@ -2,7 +2,7 @@
     <main>
         <Header @new-post-added="newPostAdded" />
         <div class="container">
-            <Posts :posts="posts" :userid="userid" @delete-post="deletePost" />
+            <Posts @postUpdate="postUpdate" :posts="posts" :userRole="userRole" :userid="userid" @delete-post="deletePost" />
         </div>
         <Footer />
     </main>
@@ -25,9 +25,23 @@ export default {
         return {
             posts: [],
             userid: 0,
+            userRole: '',
         }
     },
     methods: {
+        async postUpdate(postid, data) {
+            const token = 'Bearer ' + localStorage.JwToken
+            const updatePost = axios
+                .put(`http://localhost:3000/api/post/${postid}/update`, data, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then(async () => {
+                    this.posts = await this.fetchPosts()
+                })
+                .catch((error) => console.log(error))
+        },
         async deletePost(id) {
             const token = 'Bearer ' + localStorage.JwToken
             const deletePost = await axios
@@ -56,8 +70,8 @@ export default {
         },
         async fetchPosts() {
             const res = await fetch(`http://localhost:3000/api/post`)
-            const post = await res.json()
-            return post
+            const posts = await res.json()
+            return posts
         },
     },
     async created() {
@@ -71,6 +85,7 @@ export default {
             })
             .then((res) => {
                 this.userid = res.data.id
+                this.userRole = res.data.role
             })
             .catch((error) => console.log(error))
     },

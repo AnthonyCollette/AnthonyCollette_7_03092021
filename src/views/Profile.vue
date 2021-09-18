@@ -21,6 +21,11 @@ export default {
         FormProfile,
         Heading1,
     },
+    data() {
+        return {
+            isHome: false,
+        }
+    },
 }
 </script>
 

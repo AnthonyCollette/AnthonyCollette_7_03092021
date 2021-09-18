@@ -7,23 +7,20 @@
             </router-link>
         </div>
         <div class="connected-nav-wrapper" v-if="login">
-            <button class="new-post" @click="toggleNewPostForm()">Créer un post</button>
+            <button class="new-post" @click="toggleNewPostForm()" v-if="$route.meta.nav === 1">Créer un post</button>
+            <router-link to="/" v-if="$route.meta.nav === 2">
+                Home
+            </router-link>
             <div class="options">
-                <img class="header--avatar" :src="user.avatar" @click="toggleOptions" />
+                <img class="header--avatar" :src="avatar" @click="toggleOptions" />
                 <div class="options-wrapper" v-if="optionsShow">
-                    <router-link to="/profile">Modifier mon profil</router-link>
-                    <a class="disconnect" @click="disconnect">Se déconnecter</a>
+                    <router-link class="link-profile" to="/profile">Modifier mon profil</router-link>
+                    <p class="disconnect" @click="disconnect">Se déconnecter</p>
                 </div>
             </div>
 
             <PostForm v-if="newPostForm" @create-post="newPost" />
         </div>
-
-        <ul class="nav-items" v-if="!login">
-            <li v-for="item in navItems" :key="item">
-                <router-link :to="item.url">{{ item.name }}</router-link>
-            </li>
-        </ul>
     </nav>
 </template>
 
@@ -41,7 +38,7 @@ export default {
             login: false,
             newPostForm: false,
             optionsShow: false,
-            user: '',
+            avatar: '',
             logo: {
                 src: require(`@/assets/icon.svg`),
                 alt: 'Logo de Groupomania',
@@ -82,7 +79,7 @@ export default {
                     },
                 })
                 .then((res) => {
-                    this.user = res.data
+                    this.avatar = res.data.avatar
                 })
                 .catch((error) => console.log(error))
         },
@@ -147,8 +144,23 @@ nav {
         display: flex;
         position: relative;
         align-items: center;
+        a {
+            color: #f49292;
+            transition: 0.4s;
+            &:hover {
+                color: black;
+            }
+        }
+        .disconnect {
+            color: white;
+            transition: 0.4s;
+            cursor: pointer;
+            margin-top: 10px;
+            &:hover {
+                color: black;
+            }
+        }
     }
-
     .new-post {
         margin-right: 20px;
         background-color: white;
@@ -186,8 +198,9 @@ nav {
             margin-bottom: 10px;
             display: block;
             cursor: pointer;
+            text-decoration: none;
             &:hover {
-                text-decoration: underline;
+                text-decoration: none;
             }
             &:last-of-type {
                 margin-bottom: 0;

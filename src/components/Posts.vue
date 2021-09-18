@@ -1,7 +1,7 @@
 <template>
     <div class="posts">
         <div v-for="(post, index) in posts" :key="index">
-            <Post :post="post" :userid="userid" @delete-post="$emit('delete-post', post.id)" />
+            <Post @postUpdate="postUpdate" :post="post" :userid="userid" :userRole="userRole" @delete-post="$emit('delete-post', post.id)" />
         </div>
     </div>
 </template>
@@ -14,9 +14,15 @@ export default {
     props: {
         posts: Array,
         userid: Number,
+        userRole: String,
     },
     components: {
         Post,
+    },
+    methods: {
+        postUpdate(postid, data) {
+            this.$emit('postUpdate', postid, data)
+        },
     },
 }
 </script>

@@ -7,8 +7,14 @@ module.exports = (req, res, next) => {
     const userId = decodedToken.user.id
     const postId = req.params.id
 
+    const userRole = User.findOne({ where: { id: userId } })
+        .then((user) => {
+            this.userRole = user.dataValues.role
+        })
+        .catch((error) => console.log(error))
+
     Post.findOne({ where: { id: postId } }).then((post) => {
-        if (post.userid !== userId) {
+        if (post.userid !== userId && this.userRole !== 'admin') {
             throw "Vous n'avez pas publié ce post !"
         } else {
             next()

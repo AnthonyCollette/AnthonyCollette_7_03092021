@@ -7,7 +7,7 @@
                     <p>{{ comment.User.name }}</p>
                 </div>
                 <p>{{ comment.text }}</p>
-                <a class="delete-btn" @click="$emit('deleteComment', comment.id)" v-if="comment.userid === userid">Supprimer</a>
+                <a class="delete-btn" @click="$emit('deleteComment', comment.id)" v-if="comment.userid === userid || userRole === 'admin'">Supprimer</a>
             </li>
         </ul>
     </div>
@@ -17,9 +17,9 @@
 export default {
     name: 'Comment',
     props: {
-        id: Number,
         comments: Array,
         userid: Number,
+        userRole: String,
     },
 }
 </script>

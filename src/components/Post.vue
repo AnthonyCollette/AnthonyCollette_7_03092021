@@ -1,6 +1,6 @@
 <template>
     <div class="post">
-        <i @click="$emit('deletePost', post.id)" class="fas fa-times" v-if="post.userid === userid"></i>
+        <i @click="$emit('deletePost', post.id)" class="fas fa-times" v-if="post.userid === userid || userRole === 'admin'"></i>
 
         {{ post.text }}
         <img :src="post.image" alt="image" v-if="post.image" />
@@ -8,7 +8,9 @@
             <img :src="post.User.avatar" alt="" />
             <p>{{ post.User.name }}</p>
         </div>
-        <Comment :id="post.id" :userid="userid" :comments="comments" @deleteComment="deleteComment" />
+        <span class="post-update" @click="toggleUpdatePost()" v-if="post.userid === userid || userRole === 'admin'">Modifier mon post</span>
+        <UpdatePost :postid="post.id" v-if="showUpdatePost" @postUpdate="postUpdate" />
+        <Comment :id="post.id" :userid="userid" :userRole="userRole" :comments="comments" @deleteComment="deleteComment" />
         <CommentForm :id="post.id" :comments="comments" @addNewComment="newCommentAdded" />
     </div>
 </template>
@@ -17,24 +19,35 @@
 import CommentForm from '@/components/CommentForm'
 import Comment from '@/components/Comment'
 import axios from 'axios'
+import UpdatePost from '@/components/UpdatePost'
 
 export default {
     name: 'Post',
     components: {
         CommentForm,
         Comment,
+        UpdatePost,
     },
     props: {
         post: Object,
         userid: Number,
+        userRole: String,
     },
     data() {
         return {
+            showUpdatePost: false,
             comments: [],
             id: this.post.id,
         }
     },
     methods: {
+        postUpdate(postid, data) {
+            this.showUpdatePost = false
+            this.$emit('postUpdate', postid, data)
+        },
+        toggleUpdatePost() {
+            this.showUpdatePost = !this.showUpdatePost
+        },
         checkPostAuthor() {
             const token = 'Bearer ' + localStorage.JwToken
             axios
@@ -132,5 +145,15 @@ i {
 .author-wrapper > p {
     font-size: 20px;
     font-weight: 600;
+}
+
+.post-update {
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: end;
+    cursor: pointer;
+}
+.post-update:hover {
+    text-decoration: underline;
 }
 </style>
