@@ -10,14 +10,14 @@
         </div>
         <span class="post-update" @click="toggleUpdatePost()" v-if="post.userid === userid || userRole === 'admin'">Modifier mon post</span>
         <UpdatePost :postid="post.id" v-if="showUpdatePost" @postUpdate="postUpdate" />
-        <Comment :id="post.id" :userid="userid" :userRole="userRole" :comments="comments" @deleteComment="deleteComment" />
+        <Comments :userid="userid" :userRole="userRole" :comments="comments" @deleteComment="deleteComment" @modifyComment="modifyComment" />
         <CommentForm :id="post.id" :comments="comments" @addNewComment="newCommentAdded" />
     </div>
 </template>
 
 <script>
 import CommentForm from '@/components/CommentForm'
-import Comment from '@/components/Comment'
+import Comments from '@/components/Comments'
 import axios from 'axios'
 import UpdatePost from '@/components/UpdatePost'
 
@@ -25,7 +25,7 @@ export default {
     name: 'Post',
     components: {
         CommentForm,
-        Comment,
+        Comments,
         UpdatePost,
     },
     props: {
@@ -41,6 +41,19 @@ export default {
         }
     },
     methods: {
+        async modifyComment(data, id) {
+            const token = 'Bearer ' + localStorage.JwToken
+            const modifyComment = axios
+                .put(`http://localhost:3000/api/post/comment/${id}/update`, data, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then(async () => {
+                    this.comments = await this.fetchComments()
+                })
+                .catch((error) => console.log(error))
+        },
         postUpdate(postid, data) {
             this.showUpdatePost = false
             this.$emit('postUpdate', postid, data)

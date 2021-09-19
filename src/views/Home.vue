@@ -1,6 +1,6 @@
 <template>
     <main>
-        <Header @new-post-added="newPostAdded" />
+        <Header :userAvatar="userAvatar" @new-post-added="newPostAdded" />
         <div class="container">
             <Posts @postUpdate="postUpdate" :posts="posts" :userRole="userRole" :userid="userid" @delete-post="deletePost" />
         </div>
@@ -23,13 +23,14 @@ export default {
     },
     data() {
         return {
+            userAvatar: '',
             posts: [],
             userid: 0,
             userRole: '',
         }
     },
     methods: {
-        async postUpdate(postid, data) {
+        postUpdate(postid, data) {
             const token = 'Bearer ' + localStorage.JwToken
             const updatePost = axios
                 .put(`http://localhost:3000/api/post/${postid}/update`, data, {
@@ -84,6 +85,7 @@ export default {
                 },
             })
             .then((res) => {
+                this.userAvatar = res.data.avatar
                 this.userid = res.data.id
                 this.userRole = res.data.role
             })

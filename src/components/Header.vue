@@ -12,10 +12,10 @@
                 Home
             </router-link>
             <div class="options">
-                <img class="header--avatar" :src="avatar" @click="toggleOptions" />
+                <img class="header--avatar" :src="userAvatar" @click="toggleOptions" />
                 <div class="options-wrapper" v-if="optionsShow">
                     <router-link class="link-profile" to="/profile">Modifier mon profil</router-link>
-                    <p class="disconnect" @click="disconnect">Se déconnecter</p>
+                    <button class="disconnect" @click="disconnect">Se déconnecter</button>
                 </div>
             </div>
 
@@ -26,7 +26,6 @@
 
 <script>
 import PostForm from '../components/PostForm.vue'
-import axios from 'axios'
 
 export default {
     name: 'Header',
@@ -47,6 +46,7 @@ export default {
     },
     props: {
         postForm: Object,
+        userAvatar: String,
     },
     methods: {
         disconnect() {
@@ -70,23 +70,9 @@ export default {
         toggleOptions() {
             this.optionsShow = !this.optionsShow
         },
-        getUser() {
-            const token = 'Bearer ' + localStorage.JwToken
-            axios
-                .get('http://localhost:3000/api/auth/getUser', {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then((res) => {
-                    this.avatar = res.data.avatar
-                })
-                .catch((error) => console.log(error))
-        },
     },
     created() {
         this.toggleLogin()
-        this.getUser()
     },
 }
 </script>
@@ -156,6 +142,10 @@ nav {
             transition: 0.4s;
             cursor: pointer;
             margin-top: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 16px;
+            padding: 0;
             &:hover {
                 color: black;
             }

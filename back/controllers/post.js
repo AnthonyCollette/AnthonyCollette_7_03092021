@@ -19,6 +19,7 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     const id = req.params.id
     const post = await Post.findOne({ where: { id: id } })
+    console.log(post)
     if (req.body.text) {
         post.text = req.body.text
     }
@@ -89,4 +90,14 @@ exports.getComments = async (req, res, next) => {
 exports.deleteComment = async (req, res, next) => {
     const id = req.params.id
     const deleteComment = await Comment.destroy({ where: { id: id } }).then(() => res.status(201).json())
+}
+
+exports.modifyComment = async (req, res, next) => {
+    const id = req.params.id
+    const comment = await Comment.findOne({ where: { id: id } })
+    comment.text = req.body.text
+    await comment
+        .save()
+        .then(() => res.status(201).json())
+        .catch((error) => res.status(500).json({ error }))
 }
