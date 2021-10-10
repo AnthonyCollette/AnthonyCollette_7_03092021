@@ -24,11 +24,28 @@ const routes = [
         path: '/register',
         name: 'register',
         component: Register,
+        beforeEnter: (to, from, next) => {
+            if (localStorage.JwToken) {
+                next({ path: '/' })
+            } else {
+                next()
+            }
+        },
+        meta: {
+            nav: 1,
+        },
     },
     {
         path: '/login',
         name: 'login',
         component: Login,
+        beforeEnter: (to, from, next) => {
+            if (localStorage.JwToken) {
+                next({ path: '/' })
+            } else {
+                next()
+            }
+        },
     },
     {
         path: '/profile',

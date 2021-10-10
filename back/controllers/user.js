@@ -73,8 +73,8 @@ exports.updateOne = async (req, res, next) => {
     }
     if (req.file) {
         const filename = user.avatar.split('/images/')[1]
-        fs.unlink(`images/${filename}`, (err) => {
-            if (err) {
+        fs.unlink(`images/${filename}`, (error) => {
+            if (error) {
                 console.log(error)
             } else {
                 console.log('Image supprimée !')
