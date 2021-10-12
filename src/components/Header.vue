@@ -1,7 +1,7 @@
 <template>
     <nav>
         <div class="logo-wrapper">
-            <router-link to="/">
+            <router-link to="/" tabindex="1">
                 <img :src="logo.src" :alt="logo.alt" />
                 <span class="society-name">Groupomania</span>
             </router-link>
@@ -12,7 +12,7 @@
                 Home
             </router-link>
             <div class="options">
-                <img class="header--avatar" :src="userAvatar" @click="toggleOptions" />
+                <img class="header--avatar" :src="userAvatar" @click="toggleOptions" tabindex="0" role="button" @keyup.enter="toggleOptions" />
                 <div class="options-wrapper" v-if="optionsShow">
                     <router-link class="link-profile" to="/profile">Modifier mon profil</router-link>
                     <button class="disconnect" @click="disconnect">Se déconnecter</button>

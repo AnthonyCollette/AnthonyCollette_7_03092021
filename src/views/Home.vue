@@ -45,16 +45,20 @@ export default {
         },
         async deletePost(id) {
             const token = 'Bearer ' + localStorage.JwToken
-            const deletePost = await axios
-                .delete('http://localhost:3000/api/post/delete/' + id, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then(() => {
-                    this.posts = this.posts.filter((post) => post.id !== id)
-                })
-                .catch((error) => console.log(error))
+            if (confirm('Voulez-vous vraiment supprimer ce post ?')) {
+                const deletePost = await axios
+                    .delete('http://localhost:3000/api/post/delete/' + id, {
+                        headers: {
+                            Authorization: token,
+                        },
+                    })
+                    .then(() => {
+                        this.posts = this.posts.filter((post) => post.id !== id)
+                    })
+                    .catch((error) => console.log(error))
+            } else {
+                console.log("Le post n'a pas été supprimé !")
+            }
         },
         async newPostAdded(data) {
             const token = 'Bearer ' + localStorage.JwToken

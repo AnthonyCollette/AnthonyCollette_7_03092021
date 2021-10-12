@@ -1,11 +1,11 @@
 <template>
     <div class="post">
-        <i @click="$emit('deletePost', post.id)" class="fas fa-times" v-if="post.userid === userid || userRole === 'admin'"></i>
+        <i @click="$emit('deletePost', post.id)" class="fas fa-times" v-if="post.userid === userid || userRole === 'admin'" tabindex="0"></i>
 
         {{ post.text }}
         <img :src="post.image" alt="image" v-if="post.image" />
         <div class="author-wrapper">
-            <img :src="post.User.avatar" alt="" />
+            <img :src="post.User.avatar" alt="Votre avatar" />
             <p>{{ post.User.name }}</p>
         </div>
         <span class="post-update" @click="toggleUpdatePost()" v-if="post.userid === userid || userRole === 'admin'">Modifier mon post</span>
@@ -76,16 +76,20 @@ export default {
         },
         async deleteComment(commentId) {
             const token = 'Bearer ' + localStorage.JwToken
-            const deleteComment = await axios
-                .delete('http://localhost:3000/api/post/comment/' + commentId, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then(() => {
-                    this.comments = this.comments.filter((comment) => comment.id !== commentId)
-                })
-                .catch((error) => console.log(error))
+            if (confirm('Voulez-vous vraiment supprimer ce commentaire ?')) {
+                const deleteComment = await axios
+                    .delete('http://localhost:3000/api/post/comment/' + commentId, {
+                        headers: {
+                            Authorization: token,
+                        },
+                    })
+                    .then(() => {
+                        this.comments = this.comments.filter((comment) => comment.id !== commentId)
+                    })
+                    .catch((error) => console.log(error))
+            } else {
+                console.log("Le commentaire n'a pas été supprimé !")
+            }
         },
         async newCommentAdded(id, data) {
             const token = 'Bearer ' + localStorage.JwToken
